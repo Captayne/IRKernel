@@ -11,3 +11,8 @@ ClaudeCodeTransscript.docx
 test/*_out.txt
 test/test_lauf
 test/*_lauf
+
+# Licence files: per licensee, never in the repository.
+*.license
+*.lic
+irkernel.license
