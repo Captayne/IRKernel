@@ -95,6 +95,7 @@ void irk_port_idle(void) { if (host_use_fake) host_fake_us += 100; else Sleep(0)
 #else  /* POSIX */
 
 #include <ucontext.h>
+#include <stdint.h>
 #include <sys/time.h>
 
 /* Je Kern eigen: jeder Kern ist hier ein Thread, und die Haupttask
@@ -104,17 +105,29 @@ void irk_port_idle(void) { if (host_use_fake) host_fake_us += 100; else Sleep(0)
    thread-lokale Zeiger bleibt also gueltig. */
 static __thread ucontext_t main_uc;
 
+/* Der Kontextblock liegt an der Oberkante des uebergebenen Bereichs, wie
+   bei den Assembler-Portierungen auch: so gehoert er zum Stack und wird
+   mit ihm frei -- eine eigene Freigabe gibt es in der Schnittstelle
+   nicht. Darunter bleibt der eigentliche Stack der Task.
+
+   volatile, weil GCC getcontext() wie setjmp() behandelt und sonst warnt,
+   der Zeiger koenne ueber den Aufruf hinweg verlorengehen. */
 void *irk_ctx_create(void *stack, size_t size, void (*entry)(void))
 {
-    ucontext_t *uc = (ucontext_t *)malloc(sizeof(ucontext_t));
-    if (uc == NULL) return NULL;
+    ucontext_t *volatile uc;
+    uintptr_t            top;
 
-    if (getcontext(uc) != 0) { free(uc); return NULL; }
+    if (stack == NULL || size < irk_ctx_min_stack()) return NULL;
+
+    top = ((uintptr_t)stack + size - sizeof(ucontext_t)) & ~(uintptr_t)63;
+    uc  = (ucontext_t *)top;
+
+    if (getcontext(uc) != 0) return NULL;
     uc->uc_stack.ss_sp    = stack;
-    uc->uc_stack.ss_size  = size;
+    uc->uc_stack.ss_size  = (size_t)(top - (uintptr_t)stack);
     uc->uc_link           = NULL;
     makecontext(uc, entry, 0);
-    return uc;
+    return (void *)uc;
 }
 
 void irk_ctx_switch(void **old_sp, void *new_sp)
