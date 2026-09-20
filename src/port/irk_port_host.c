@@ -46,6 +46,21 @@ static VOID CALLBACK irk_fiber_proc(LPVOID param)
     for (;;) Sleep(1000);
 }
 
+/* Notloesung: Windows fuehrt die Grenzen des laufenden Stacks im Thread
+   Environment Block mit und baut darauf Guard Page und Ausnahme-
+   behandlung auf. Ein selbst umgebogener Stackpointer -- wie ihn die
+   Assembler-Portierungen benutzen -- brauchte keine besonderen Rechte,
+   liefe dieser Buchfuehrung aber davon. Ein Fiber ist der vorgesehene
+   Weg, deshalb bringt er seinen Stack selbst mit, und deshalb bleibt der
+   uebergebene Bereich hier ungenutzt: einen eigenen Puffer nimmt auch
+   CreateFiberEx nicht entgegen, nur Groessen.
+
+   Zwei Folgen, die man kennen muss: der Kernel haelt den Puffer
+   vergeblich vor, und seine Stackpruefung faerbt einen Bereich ein, auf
+   dem nie eine Task laeuft -- sie meldet ihn immer als unberuehrt. Auch
+   abgeraeumt (DeleteFiber) wird nichts, dafuer muesste die Schnittstelle
+   um eine Freigabe wachsen. Fuer die Testportierung auf dem Entwicklungs-
+   rechner ist das hinnehmbar; Ziel des Kernels ist Windows nicht. */
 void *irk_ctx_create(void *stack, size_t size, void (*entry)(void))
 {
     (void)stack;
