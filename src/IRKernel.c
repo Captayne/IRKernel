@@ -1982,3 +1982,19 @@ void irk_unlock(void)
     irk_core_t *K = irk_enter();
     if (K != NULL && K->lockcnt > 0) K->lockcnt--;
 }
+
+
+/*========================================================================*\
+ *  Lizenz  --  Vorgabe
+\*========================================================================*/
+
+/* Schwach gebunden: ohne eigene Pruefung gilt die Benutzung als gueltig.
+   Der Kernel ruft diese Funktion nirgends auf -- warum, steht in
+   IRKernel.h. */
+#if defined(__GNUC__)
+__attribute__((weak))
+#endif
+int irk_license_valid(void)
+{
+    return 1;
+}
