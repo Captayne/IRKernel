@@ -1,0 +1,202 @@
+IRKernel -- zwei Kerne, ein Kernel
+8 Bloecke, je 10 s (Anlauf 2 s), dann die Zusammenfassung.
+
+--- Block 0/7: Anlauf (2 s) ---
+  Beide Kerne starten ihren Scheduler selbst. Geprueft: feste
+  Haupttask-Handles, jede Task auf ihrem Kern, 16-Bit-Prioritaeten.
+  Ergebnis:
+  OK      Kern 0 -- Haupttask-Handle (Soll 1): 1
+  OK      Kern 1 -- Haupttask-Handle (Soll 2): 2
+  OK      alle Tasks angelegt -- Fehlschlaege: 0
+  OK      jede Task auf dem Kern, der sie angelegt hat: 1
+  OK      16-Bit-Prioritaeten -- Rechner 3 (Soll 768): 768
+  OK      keine Kernelfehler in diesem Block: 0
+
+--- Block 1/7: Queue Kern 0 -> Kern 1 (10 s) ---
+  Kern 0 schickt alle 10 ms einen Messwert (zyklisch, nicht blockierend),
+  Kern 1 empfaengt blockierend. Geprueft: lueckenlos, in Reihenfolge.
+  [Kern 1] Messwerte im Block 94, groesste Laufzeit 88 us
+  [Kern 1] Messwerte im Block 194, groesste Laufzeit 88 us
+  [Kern 1] Messwerte im Block 294, groesste Laufzeit 88 us
+  [Kern 1] Messwerte im Block 394, groesste Laufzeit 88 us
+  [Kern 1] Messwerte im Block 494, groesste Laufzeit 88 us
+  [Kern 1] Messwerte im Block 594, groesste Laufzeit 88 us
+  [Kern 1] Messwerte im Block 694, groesste Laufzeit 88 us
+  [Kern 1] Messwerte im Block 794, groesste Laufzeit 88 us
+  [Kern 1] Messwerte im Block 894, groesste Laufzeit 88 us
+  [Kern 1] Messwerte im Block 994, groesste Laufzeit 88 us
+  Ergebnis:
+  OK      Werte in 10 s (Soll 1000): 1001
+  OK      verloren oder vertauscht: 0
+  OK      groesste Laufzeit durch die Queue (us): 88
+  OK      keine Kernelfehler in diesem Block: 0
+
+--- Block 2/7: Wecken ueber die Kerngrenze (10 s) ---
+  Kern 0 gibt alle 500 ms ein Semaphor frei, auf das Kern 1 wartet.
+  Die LED blitzt bei jeder Weckung blau.
+  [Kern 1] Weckungen im Block 2, groesste Verzoegerung 51 us
+  [Kern 1] Weckungen im Block 4, groesste Verzoegerung 51 us
+  [Kern 1] Weckungen im Block 6, groesste Verzoegerung 51 us
+  [Kern 1] Weckungen im Block 8, groesste Verzoegerung 51 us
+  [Kern 1] Weckungen im Block 10, groesste Verzoegerung 75 us
+  [Kern 1] Weckungen im Block 12, groesste Verzoegerung 75 us
+  [Kern 1] Weckungen im Block 14, groesste Verzoegerung 75 us
+  [Kern 1] Weckungen im Block 16, groesste Verzoegerung 75 us
+  [Kern 1] Weckungen im Block 18, groesste Verzoegerung 75 us
+  [Kern 1] Weckungen im Block 20, groesste Verzoegerung 75 us
+  Ergebnis:
+  OK      Weckungen in 10 s (Soll 20): 20
+  OK      groesste Weckverzoegerung (us): 75
+  OK      keine Kernelfehler in diesem Block: 0
+
+--- Block 3/7: Semaphor ueber beide Kerne (10 s) ---
+  Je zwei Schreiber pro Kern aendern ein Konto unter einem Semaphor,
+  je einer ohne. Mit Semaphor darf nichts passieren -- ohne passiert es.
+  [Kern 1] Buchungen Kern 0: 1502  Kern 1: 1491  ohne Semaphor verletzt: 40
+  [Kern 1] Buchungen Kern 0: 3407  Kern 1: 3388  ohne Semaphor verletzt: 74
+  [Kern 1] Buchungen Kern 0: 5310  Kern 1: 5284  ohne Semaphor verletzt: 113
+  [Kern 1] Buchungen Kern 0: 7216  Kern 1: 7181  ohne Semaphor verletzt: 155
+  [Kern 1] Buchungen Kern 0: 9122  Kern 1: 9079  ohne Semaphor verletzt: 197
+  [Kern 1] Buchungen Kern 0: 11026  Kern 1: 10975  ohne Semaphor verletzt: 243
+  [Kern 1] Buchungen Kern 0: 12932  Kern 1: 12873  ohne Semaphor verletzt: 295
+  [Kern 1] Buchungen Kern 0: 14836  Kern 1: 14771  ohne Semaphor verletzt: 342
+  [Kern 1] Buchungen Kern 0: 16742  Kern 1: 16668  ohne Semaphor verletzt: 396
+  [Kern 1] Buchungen Kern 0: 18647  Kern 1: 18564  ohne Semaphor verletzt: 472
+  Ergebnis:
+  OK      mit Semaphor -- Verletzungen: 0
+  OK      beide Kerne kommen ans Semaphor -- Buchungen Kern 0: 19077
+          Buchungen Kern 1: 18992
+          OHNE Semaphor -- Verletzungen (zeigt, warum man es braucht): 480
+  OK      keine Kernelfehler in diesem Block: 0
+
+--- Block 4/7: Fair Share und Takt unter Volllast (10 s) ---
+  Zwei Rechner auf Kern 1 ohne Pause, Prioritaet 256 und 768: Soll 1 : 3.
+  Kern 0 haelt dabei seinen 10-ms-Takt.
+  [Kern 1] Rechenzeit Prio 256 : 768 = 1 : 2.83
+  [Kern 1] Rechenzeit Prio 256 : 768 = 1 : 3.00
+  [Kern 1] Rechenzeit Prio 256 : 768 = 1 : 2.99
+  [Kern 1] Rechenzeit Prio 256 : 768 = 1 : 2.99
+  [Kern 1] Rechenzeit Prio 256 : 768 = 1 : 3.00
+  [Kern 1] Rechenzeit Prio 256 : 768 = 1 : 2.99
+  [Kern 1] Rechenzeit Prio 256 : 768 = 1 : 2.99
+  [Kern 1] Rechenzeit Prio 256 : 768 = 1 : 3.00
+  [Kern 1] Rechenzeit Prio 256 : 768 = 1 : 3.00
+  [Kern 1] Rechenzeit Prio 256 : 768 = 1 : 2.99
+  Ergebnis:
+  OK      Rechenzeit Prio 768 : Prio 256 (x100, Soll 300): 298
+          Rechenzeit Prio 256 (ms): 2479
+          Rechenzeit Prio 768 (ms): 7408
+  OK      10-ms-Takt auf Kern 0 -- groesste Abweichung (us): 206
+  OK      keine Kernelfehler in diesem Block: 0
+
+--- Block 5/7: Prioritaet 1 neben Volllast (10 s) ---
+  Eine Task mit Prioritaet 1 blitzt weiss (irk_delay(2)) neben den Rechnern.
+  Sie bekommt ~0,1 %: sie verhungert nicht, bleibt aber ~35 ms weiss --
+  irk_delay heisst 'fruehestens', und dran ist sie nach ihrem Anteil.
+  [Kern 1] Blitze im Block 8, laengste Weiss-Dauer 73385 us
+  [Kern 1] Blitze im Block 25, laengste Weiss-Dauer 73385 us
+  [Kern 1] Blitze im Block 42, laengste Weiss-Dauer 73385 us
+  [Kern 1] Blitze im Block 59, laengste Weiss-Dauer 73385 us
+  [Kern 1] Blitze im Block 75, laengste Weiss-Dauer 73385 us
+  [Kern 1] Blitze im Block 92, laengste Weiss-Dauer 73385 us
+  [Kern 1] Blitze im Block 109, laengste Weiss-Dauer 73385 us
+  [Kern 1] Blitze im Block 126, laengste Weiss-Dauer 73385 us
+  [Kern 1] Blitze im Block 142, laengste Weiss-Dauer 73385 us
+  [Kern 1] Blitze im Block 159, laengste Weiss-Dauer 73385 us
+  Ergebnis:
+  OK      Prio-1-Task verhungert nicht -- Blitze in 10 s: 166
+  OK      kuerzeste Weiss-Dauer (us, Soll >= 2000): 31047
+          laengste Weiss-Dauer (us, erwartet um 35000): 73385
+          groesster Abstand zweier Blitze (us): 135422
+          Rechenzeit-Anteil (ppm, erwartet um 950): 963
+          Rechner dabei weiter Prio 768 : 256 (x100): 300
+  Laengster Blitz im Block:
+     ab Beginn 57 ms, weiss 73385 us, Abstand 0 us, led.show() 20 us
+     Einschalten:  Konto Blitz 22916 k, Rechner 22916 k, Vorsprung 0 k
+     Ausschalten:  Konto Blitz 22934 k, Rechner 22934 k, Vorsprung 0 k
+  OK      keine Kernelfehler in diesem Block: 0
+
+--- Block 6/7: Kernelaufrufe aus dem Interrupt (10 s) ---
+  Ein Timer ruft alle 100 ms irk_sema_signal() aus dem Interrupt.
+  Jeder Aufruf muss abgelehnt werden (IRK_ERR_IN_ISR).
+  [Kern 1] Interrupt-Versuche 6, abgelehnt 6
+  [Kern 1] Interrupt-Versuche 16, abgelehnt 16
+  [Kern 1] Interrupt-Versuche 26, abgelehnt 26
+  [Kern 1] Interrupt-Versuche 36, abgelehnt 36
+  [Kern 1] Interrupt-Versuche 46, abgelehnt 46
+  [Kern 1] Interrupt-Versuche 56, abgelehnt 56
+  [Kern 1] Interrupt-Versuche 66, abgelehnt 66
+  [Kern 1] Interrupt-Versuche 76, abgelehnt 76
+  [Kern 1] Interrupt-Versuche 86, abgelehnt 86
+  [Kern 1] Interrupt-Versuche 96, abgelehnt 96
+  Ergebnis:
+  OK      alle Aufrufe aus dem Interrupt abgelehnt -- Versuche: 100
+          abgelehnt mit IRK_ERR_IN_ISR: 100
+  OK      keine Kernelfehler in diesem Block: 0
+
+--- Block 7/7: Alles gleichzeitig (10 s) ---
+  Alle Tasks gleichzeitig. Am Ende die Rechenzeit jeder Task.
+  [Kern 1] Messw. 49  Weck. 1  Blitze 6  Rechenzeit 1 : 2.97
+  [Kern 1] Messw. 149  Weck. 3  Blitze 21  Rechenzeit 1 : 3.00
+  [Kern 1] Messw. 249  Weck. 5  Blitze 35  Rechenzeit 1 : 2.99
+  [Kern 1] Messw. 349  Weck. 7  Blitze 50  Rechenzeit 1 : 3.00
+  [Kern 1] Messw. 449  Weck. 9  Blitze 65  Rechenzeit 1 : 3.00
+  [Kern 1] Messw. 549  Weck. 11  Blitze 79  Rechenzeit 1 : 2.99
+  [Kern 1] Messw. 649  Weck. 13  Blitze 94  Rechenzeit 1 : 3.00
+  [Kern 1] Messw. 749  Weck. 15  Blitze 108  Rechenzeit 1 : 3.00
+  [Kern 1] Messw. 849  Weck. 17  Blitze 123  Rechenzeit 1 : 2.99
+  [Kern 1] Messw. 949  Weck. 19  Blitze 138  Rechenzeit 1 : 3.00
+  Ergebnis:
+  OK      Queue -- Werte, lueckenlos (Soll 1000): 1002
+  OK      Wecken -- Weckungen (Soll 20): 20
+  OK      Semaphor -- Verletzungen: 0
+          ohne Semaphor -- Verletzungen: 591
+  OK      Fair Share -- Prio 768 : 256 (x100, Soll 300): 300
+  OK      Takt Kern 0 -- groesste Abweichung (us): 48
+  OK      Prio-1-Task -- Blitze: 145
+  Laengster Blitz im Block:
+     ab Beginn 6152 ms, weiss 48327 us, Abstand 69560 us, led.show() 3 us
+     Einschalten:  Konto Blitz 33415 k, Rechner 33415 k, Vorsprung 0 k
+     Ausschalten:  Konto Blitz 33426 k, Rechner 33426 k, Vorsprung 0 k
+  OK      Interrupt -- alle Aufrufe abgelehnt: 100
+  OK      Tasks blieben die ganze Zeit auf ihrem Kern -- Verletzungen: 0
+
+  Rechenzeit je Task im Block (10017 ms)
+
+  Kern 0  Task       Hdl Prio  Rechenzeit   Anteil     Laeufe  us/Lauf
+    main           1  256       14 ms    0.1 %        500       29
+    erzeuger       3  512       17 ms    0.1 %       1002       17
+    ausloeser      4  256        0 ms    0.0 %         20       16
+    schreib0a      5  256      424 ms    4.2 %      10019       42
+    schreib0b      6  256      424 ms    4.2 %      10008       42
+    frei0          7  256      427 ms    4.2 %       9556       44
+    Summe                     1308 ms   13.0 %
+    nicht zugerechnet         8709 ms
+
+  Kern 1  Task       Hdl Prio  Rechenzeit   Anteil     Laeufe  us/Lauf
+    main           2  256        1 ms    0.0 %         10      150
+    empfaenger     8  512       26 ms    0.2 %       1002       25
+    wecker         9  512        0 ms    0.0 %         20       27
+    schreib1a     10  256      465 ms    4.6 %       9869       47
+    schreib1b     11  256      467 ms    4.6 %       9862       47
+    frei1         12  256      337 ms    3.3 %       7274       46
+    rechner1      13  256     2173 ms   21.6 %      93605       23
+    rechner3      14  768     6521 ms   65.0 %     281660       23
+    led           15  256       10 ms    0.1 %        501       20
+    blitz         16    1        8 ms    0.0 %        291       29
+    Summe                    10012 ms   99.9 %
+    nicht zugerechnet            5 ms
+  OK      keine Kernelfehler in diesem Block: 0
+
+=== Zusammenfassung ===
+  Block 0  Anlauf                                6 OK   0 Fehler
+  Block 1  Queue Kern 0 -> Kern 1                4 OK   0 Fehler
+  Block 2  Wecken ueber die Kerngrenze           3 OK   0 Fehler
+  Block 3  Semaphor ueber beide Kerne            3 OK   0 Fehler
+  Block 4  Fair Share und Takt unter Volllast    3 OK   0 Fehler
+  Block 5  Prioritaet 1 neben Volllast           3 OK   0 Fehler
+  Block 6  Kernelaufrufe aus dem Interrupt       2 OK   0 Fehler
+  Block 7  Alles gleichzeitig                    9 OK   0 Fehler
+
+=== 33 bestanden, 0 Fehler ===
+(Test beendet -- Reset startet ihn neu.)

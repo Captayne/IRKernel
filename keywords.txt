@@ -1,0 +1,114 @@
+#######################################
+# Syntax Coloring Map for IRKernel
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+irk_task_t	KEYWORD1
+irk_time_t	KEYWORD1
+irk_sema_t	KEYWORD1
+irk_prio_t	KEYWORD1
+IRKernel	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+irk_init	KEYWORD2
+irk_deinit	KEYWORD2
+irk_is_running	KEYWORD2
+irk_loops_begin	KEYWORD2
+irk_core_id	KEYWORD2
+irk_task_core	KEYWORD2
+irk_yield	KEYWORD2
+irk_delay	KEYWORD2
+irk_delay_us	KEYWORD2
+irk_now_us	KEYWORD2
+irk_lock	KEYWORD2
+irk_unlock	KEYWORD2
+
+irk_task_create	KEYWORD2
+irk_task_suspend	KEYWORD2
+irk_task_resume	KEYWORD2
+irk_task_kill	KEYWORD2
+irk_task_kill_at	KEYWORD2
+irk_task_kill_after	KEYWORD2
+irk_task_kill_after_us	KEYWORD2
+irk_task_delay	KEYWORD2
+irk_task_delay_us	KEYWORD2
+irk_task_set_prio	KEYWORD2
+irk_task_get_prio	KEYWORD2
+irk_task_status	KEYWORD2
+irk_task_self	KEYWORD2
+irk_task_count	KEYWORD2
+irk_task_runtime	KEYWORD2
+irk_task_runtime_us	KEYWORD2
+irk_task_calls	KEYWORD2
+irk_task_vruntime	KEYWORD2
+irk_task_name	KEYWORD2
+irk_task_by_name	KEYWORD2
+
+irk_task_set_cyclic	KEYWORD2
+irk_task_set_cyclic_us	KEYWORD2
+irk_task_set_cyclic_at	KEYWORD2
+irk_task_set_cyclic_at_us	KEYWORD2
+irk_task_set_normal	KEYWORD2
+
+irk_sema_init	KEYWORD2
+irk_sema_wait	KEYWORD2
+irk_sema_signal	KEYWORD2
+irk_sema_try_wait	KEYWORD2
+irk_sema_count	KEYWORD2
+
+irk_watch_add	KEYWORD2
+irk_watch_remove	KEYWORD2
+irk_stack_free	KEYWORD2
+irk_stack_watch	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+IRK_NO_TASK	LITERAL1
+IRK_MAIN_TASK	LITERAL1
+IRK_MAIN_TASK_OF	LITERAL1
+
+IRK_RUNNING	LITERAL1
+IRK_WAIT_TIME	LITERAL1
+IRK_WAIT_SEMA	LITERAL1
+IRK_WAIT_RESUME	LITERAL1
+IRK_WAIT_DEAD	LITERAL1
+IRK_WAIT_CYCLE	LITERAL1
+IRK_WAIT_USER	LITERAL1
+IRK_KILLED	LITERAL1
+
+IRK_ERR_NONE	LITERAL1
+IRK_ERR_NO_MEMORY	LITERAL1
+IRK_ERR_TOO_MANY_TASKS	LITERAL1
+IRK_ERR_BAD_TASK	LITERAL1
+IRK_ERR_BAD_SEMA	LITERAL1
+IRK_ERR_SEMA_UNINIT	LITERAL1
+IRK_ERR_SIGNAL_NO_WAIT	LITERAL1
+IRK_ERR_DEADLOCK	LITERAL1
+IRK_ERR_STACK_OVERFLOW	LITERAL1
+IRK_ERR_NOT_INIT	LITERAL1
+IRK_ERR_KILL_MAIN	LITERAL1
+IRK_ERR_WRONG_CORE	LITERAL1
+IRK_ERR_IN_ISR	LITERAL1
+
+IRK_MAX_CORES	LITERAL1
+IRK_MAX_TASKS	LITERAL1
+IRK_MAX_SEMAPHORES	LITERAL1
+IRK_MIN_TIMESLICE_MS	LITERAL1
+IRK_MIN_TIMESLICE_US	LITERAL1
+IRK_TIME_64	LITERAL1
+IRK_DEFAULT_STACK	LITERAL1
+
+IRK_WATCH_ALWAYS	LITERAL1
+IRK_WATCH_ONCE	LITERAL1
+IRK_WATCH_LEVEL	LITERAL1
+IRK_WATCH_EDGE	LITERAL1
+IRK_WATCH_POSITIVE	LITERAL1
+IRK_WATCH_NEGATIVE	LITERAL1
