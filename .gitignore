@@ -1,0 +1,13 @@
+# working documents, not part of the library
+ClaudeCodeTransscript.docx
+
+# build output
+*.o
+*.a
+*.elf
+*.exe
+*.bin
+*.hex
+test/*_out.txt
+test/test_lauf
+test/*_lauf
