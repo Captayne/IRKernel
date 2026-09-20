@@ -473,6 +473,30 @@ void irk_lock(void);
 void irk_unlock(void);
 
 
+/*========================================================================*\
+ *  Lizenz  --  abstrakter Haken
+ *
+ *  Meldet, ob diese Uebersetzung von IRKernel unter einer gueltigen
+ *  Lizenz benutzt wird.
+ *
+ *  Der Kernel selbst fragt das NIE ab und richtet sein Verhalten nicht
+ *  danach. Ein Scheduler, der die Arbeit verweigert, haelt im Zweifel
+ *  eine Maschine an -- das waere die falsche Antwort auf eine
+ *  Vertragsfrage. Die Auskunft ist zum Melden da: im Baulauf, im
+ *  Firmware-Manifest, in einer Diagnoseausgabe. Durchgesetzt wird eine
+ *  Lizenz beim Beziehen des Kernels, nicht zur Laufzeit.
+ *
+ *  Die Vorgabe ist schwach gebunden und liefert 1. Eine kommerzielle
+ *  Auslieferung legt eine eigene Uebersetzungseinheit daneben, die sie
+ *  verdraengt; wer IRKernel frei benutzt, merkt von alledem nichts.
+ *
+ *  Rueckgabe: 1 gueltig, 0 nicht. Ein int wie bei irk_is_running() --
+ *  der Header kommt ohne <stdbool.h> aus.
+\*========================================================================*/
+
+int irk_license_valid(void);
+
+
 #ifdef __cplusplus
 }
 #endif
