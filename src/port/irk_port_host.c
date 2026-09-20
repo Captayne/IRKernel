@@ -97,7 +97,12 @@ void irk_port_idle(void) { if (host_use_fake) host_fake_us += 100; else Sleep(0)
 #include <ucontext.h>
 #include <sys/time.h>
 
-static ucontext_t main_uc;
+/* Je Kern eigen: jeder Kern ist hier ein Thread, und die Haupttask
+   eines Kerns sichert beim ersten Wechsel ihren Kontext hierhin.
+   Ein gemeinsames Objekt liessen die Kerne gegenseitig ihre
+   Stackzeiger ueberschreiben. Tasks wechseln den Kern nie, der
+   thread-lokale Zeiger bleibt also gueltig. */
+static __thread ucontext_t main_uc;
 
 void *irk_ctx_create(void *stack, size_t size, void (*entry)(void))
 {
