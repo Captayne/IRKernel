@@ -43,7 +43,7 @@ travels with it and the recipients stay within the terms above.
 
 Commercial Use requires a licence fee:
 
-- **0.30 EUR per Device shipped.**
+- **Without further negotiations it is 3 EUR per Device shipped. Negotiations are welcome.**
 - **The first 100 Devices per licensee are free of charge.** The fee applies from
   Device 101 onwards.
 - The fee is due once per Device, regardless of how many processors or cores in
