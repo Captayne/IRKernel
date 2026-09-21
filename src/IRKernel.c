@@ -1185,7 +1185,7 @@ void irk_yield(void)
 
         /*--- Niemand lauffaehig --------------------------------------*/
         leer = 1;
-        if (waiting_for_time == 0) {
+        if (waiting_for_time == 0 && !IRK_EXTERNAL_WAKE) {
             if (++dead_cycles > IRK_DEADLOCK_CYCLES) {
                 /* Echter Deadlock: Haupttask dieses Kerns erzwingen und
                    -- nach der Sperre -- melden. */
@@ -1196,7 +1196,8 @@ void irk_yield(void)
                 break;                                      /* Sperre bleibt */
             }
         } else {
-            /* Es laeuft eine Frist, oder der andere Kern kann wecken:
+            /* Es laeuft eine Frist, der andere Kern kann wecken, oder
+               (IRK_EXTERNAL_WAKE) ein Interrupt bzw. irk_port_idle():
                kurz ruhen -- ohne Sperre. */
             dead_cycles = 0;
             irk_port_idle();

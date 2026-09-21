@@ -36,6 +36,8 @@
  *
  *  Ohne FPU:  r4..r11 + lr                     =  9 Worte
  *  Mit  FPU:  zusaetzlich s16..s31             = 25 Worte
+ *  Mit IRK_CTX_SAVE_CONTROL zuunterst noch CONTROL und der gerade nicht
+ *  benutzte Stackzeiger                        = +2 Worte
  *
  *  Die Ruecksprungadresse liegt in beiden Faellen im *letzten* Wort des
  *  Rahmens, also an der hoechsten Adresse -- der Rest wird mit 0
@@ -45,10 +47,20 @@
 
 #if defined(__ARM_FP) && (__ARM_FP > 0)
 #  define IRK_CTX_HAS_FPU  1
-#  define IRK_CTX_WORDS    25
+#  define IRK_CTX_BASE     25
 #else
 #  define IRK_CTX_HAS_FPU  0
-#  define IRK_CTX_WORDS     9
+#  define IRK_CTX_BASE      9
+#endif
+
+/* CONTROL 0 im neuen Rahmen: privilegiert, auf dem MSP -- so, wie eine
+   frisch angelegte Task bisher auch lief. */
+#if IRK_CTX_SAVE_CONTROL && !defined(__ARM_ARCH_6M__) && !defined(__ARM_ARCH_8M_BASE__)
+#  define IRK_CTX_CONTROL  1
+#  define IRK_CTX_WORDS    (IRK_CTX_BASE + 2)
+#else
+#  define IRK_CTX_CONTROL  0
+#  define IRK_CTX_WORDS    IRK_CTX_BASE
 #endif
 
 
@@ -133,8 +145,42 @@ void irk_ctx_switch(void **old_sp __attribute__((unused)),
 #if IRK_CTX_HAS_FPU
         "vpush  {s16-s31}       \n"   /* callee-saved FPU-Register         */
 #endif
+#if IRK_CTX_CONTROL
+        /* CONTROL und der andere Stackzeiger. Welcher der beiden SPs
+           "sp" gerade ist, sagt CONTROL.SPSEL. */
+        "mrs    r2, control     \n"
+        "tst    r2, #2          \n"
+        "ite    eq              \n"
+        "mrseq  r3, psp         \n"   /* laeuft auf MSP: PSP ist der andere*/
+        "mrsne  r3, msp         \n"   /* laeuft auf PSP: MSP ist der andere*/
+        "push   {r2, r3}        \n"
+        "str    sp, [r0]        \n"   /* alten SP festhalten               */
+
+        /* Neuen Kontext herstellen. Mit gesperrten Interrupts: die laufen
+           auf dem MSP, und der wird gleich umgesetzt. */
+        "mrs    ip, primask     \n"
+        "cpsid  i               \n"
+        "ldr    r2, [r1]        \n"   /* CONTROL                           */
+        "ldr    r3, [r1, #4]    \n"   /* der andere SP                     */
+        "add    r1, r1, #8      \n"
+        "tst    r2, #2          \n"
+        "bne    1f              \n"
+        "msr    psp, r3         \n"   /* neue Task laeuft auf dem MSP      */
+        "msr    control, r2     \n"
+        "isb                    \n"
+        "mov    sp, r1          \n"
+        "b      2f              \n"
+        "1:                     \n"
+        "msr    msp, r3         \n"   /* neue Task laeuft auf dem PSP      */
+        "msr    control, r2     \n"
+        "isb                    \n"
+        "mov    sp, r1          \n"   /* jetzt der PSP                     */
+        "2:                     \n"
+        "msr    primask, ip     \n"
+#else
         "str    sp, [r0]        \n"   /* alten SP festhalten               */
         "mov    sp, r1          \n"   /* neuen SP laden                    */
+#endif
 #if IRK_CTX_HAS_FPU
         "vpop   {s16-s31}       \n"
 #endif

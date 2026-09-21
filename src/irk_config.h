@@ -102,6 +102,25 @@
  *  Scheduling-Verhalten
 \*------------------------------------------------------------------------*/
 
+/* Koennen Tasks von aussen geweckt werden -- aus einem Interrupt oder aus
+   irk_port_idle() heraus?  Dann ist "alle Tasks warten, keine auf eine
+   Frist" kein Deadlock, sondern Leerlauf: der Kernel ruft irk_port_idle()
+   und prueft danach erneut.  So laeuft ein Betriebssystem auf IRKernel,
+   dessen Prozesse auf Tastendruck oder Beruehrung warten.
+   0: wie bisher, ein solcher Zustand wird als Deadlock gemeldet. */
+#ifndef IRK_EXTERNAL_WAKE
+#  define IRK_EXTERNAL_WAKE     0
+#endif
+
+/* Nur Cortex-M: sichert der Kontextwechsel auch CONTROL und den gerade
+   nicht benutzten Stackzeiger (MSP/PSP)?  Noetig, wenn Tasks auf
+   verschiedenen Stacks oder in verschiedenen Privilegstufen stehen, etwa
+   die Prozesse eines darauf laufenden Betriebssystems.  Kostet zwei Worte
+   je Kontext und ein paar Takte je Wechsel. */
+#ifndef IRK_CTX_SAVE_CONTROL
+#  define IRK_CTX_SAVE_CONTROL  0
+#endif
+
 /*------------------------------------------------------------------------*\
  *  Zeitbasis
  *
