@@ -41,21 +41,16 @@ travels with it and the recipients stay within the terms above.
 
 ## 3. Commercial use
 
-Commercial Use requires a licence fee:
+Commercial Use requires a commercial licence agreement with the Licensor. 
 
-- **Without further negotiations it is 3 EUR per Device shipped. Negotiations are welcome.**
-- **The first 100 Devices per licensee are free of charge.** The fee applies from
-  Device 101 onwards.
-- The fee is due once per Device, regardless of how many processors or cores in
-  that Device run the Software.
+- **Licensing on request (Basis for negotiation):** Fees and terms are flexible and negotiated on a case-by-case basis, tailored to your project size, industry, production volume, and support needs.
+- **The first 100 Devices per licensee are free of charge.** The requirement for a negotiated licence agreement applies from Device 101 onwards.
+- The licence fee is due once per Device, regardless of how many processors or cores in that Device run the Software.
 
-**Reporting and payment.** Report the number of Devices shipped once per calendar
-year, in writing, by 31 January for the previous year. The Licensor then issues an
-invoice, payable within 30 days. Keep records that allow the figures to be checked,
-and keep them for three years.
+**Reporting and payment.** Commercial licensees report the number of Devices shipped once per calendar year, in writing, by 31 January for the previous year. The Licensor then issues an invoice based on the negotiated rate, payable within 30 days. Keep records that allow the figures to be checked, and keep them for three years.
 
-**Before you ship**, notify the Licensor in writing that you intend to use the
-Software commercially (see §8). No further approval is needed to start.
+**Before you ship**, contact the Licensor in writing to negotiate and establish your commercial licence agreement (see §8).
+
 
 ---
 
