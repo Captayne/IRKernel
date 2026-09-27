@@ -368,8 +368,8 @@ out again from scratch in 2026 for microcontrollers.
 **Free for private, educational and research use. Selling devices that contain it requires a paid licence.** See [LICENSE.md](LICENSE.md) for the full terms; the short version:
 
 - **Free** for hobby projects, teaching, academic research, evaluation, and internal tools that are not shipped to third parties. You may pass the library on as long as the licence file travels with it.
-- **Commercial use** — selling, renting or leasing devices that contain IRKernel — costs **0.30 EUR per device shipped**, with the **first 100 devices free**. The fee is per device, no matter how many processors or cores in it run the kernel. Report shipped quantities once a year; an invoice follows.
+- **Commercial use** - please read license.md.
 - **Source code** may be passed to contract manufacturers and development partners for your project, but not published or distributed separately.
 - **No warranty**, and **no safety certification**: medical devices, vehicles, aviation and similar applications need a separate written agreement.
 
-Licensing and questions: Andreas Keibel — dr.andreas.keibel@googlemail.com
+Licensing and questions: Andreas Keibel — a.keibel(at)systragon.de
