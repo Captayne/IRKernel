@@ -98,9 +98,10 @@ agreement with the Licensor.
 
 ## 8. Contact
 
-Licensing, reporting and questions:
-Andreas Keibel — dr.andreas.keibel@googlemail.com
-
+For Licensing, reporting and questions:
+Dr.-Ing. Andreas Keibel
+m:a.keibel(at)systragon.de, 
+t:00_49_178_1967999
 ---
 
 ## 9. Termination
